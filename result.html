@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction Result — Shopping Mode Classifier</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --border: #e2e8f0;
+      --badge-bg: #eff6ff;
+      --badge-text: #1e40af;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      max-width: 640px;
+      width: 100%;
+      padding: 32px;
+    }
+
+    .eyebrow {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.65rem;
+      margin-bottom: 16px;
+    }
+
+    .prediction-box {
+      background: var(--badge-bg);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+    }
+
+    .prediction-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .prediction-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--badge-text);
+    }
+
+    .confidence {
+      margin-top: 6px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    h2 {
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .inputs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+      font-size: 0.92rem;
+    }
+
+    .inputs-table th,
+    .inputs-table td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .inputs-table th {
+      color: var(--muted);
+      font-weight: 600;
+      width: 45%;
+    }
+
+    .inputs-table td {
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      padding: 11px 18px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="eyebrow">Prediction Output</div>
+    <h1>Recommended Shopping Mode</h1>
+
+    <div class="prediction-box">
+      <div class="prediction-label">Predicted Best Shopping Mode</div>
+      <div class="prediction-value">{{ prediction }}</div>
+      {% if probability is defined and probability is not none %}
+        <div class="confidence">Confidence: {{ probability }}</div>
+      {% endif %}
+    </div>
+
+    {% if user_inputs %}
+      <h2>Submitted Features</h2>
+      <table class="inputs-table">
+        <tbody>
+          {% for key, value in user_inputs.items() %}
+            <tr>
+              <th>{{ key.replace('_', ' ') }}</th>
+              <td>{{ value }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+
+    <div class="actions">
+      <a href="{{ url_for('index') if 'index' in (config.get('VIEW_FUNCTIONS', {}) or []) else '/' }}" class="btn btn-primary">
+        Make Another Prediction
+      </a>
+    </div>
+  </main>
+</body>
+</html>
